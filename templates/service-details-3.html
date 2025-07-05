@@ -1,0 +1,327 @@
+<!-- templates/service-details-3.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Management - Stocker</title>
+
+  <!-- Favicons -->
+  <link href="{{ url_for('static', filename='img/logo stocker.png') }}" rel="icon" />
+  <link href="{{ url_for('static', filename='img/logo stocker.png') }}" rel="apple-touch-icon">
+
+  <!-- Fonts and CSS -->
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet" />
+  <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet" />
+  
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --secondary-color: #6c757d;
+      --success-color: #198754;
+      --danger-color: #dc3545;
+      --light-bg: #f8f9fa;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Layout styling */
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: #f5f7fa;
+      color: #212529;
+    }
+
+    .content-section {
+      margin-top: 100px;
+      margin-bottom: 50px;
+    }
+
+    .curved-container {
+      background-color: #ffffff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+    }
+
+    .logout-button {
+      margin-left: auto;
+    }
+
+    /* Header styling */
+    .header {
+      background-color: #ffffff;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .sitename {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 0;
+    }
+
+    /* Table styling */
+    .table-hover tbody tr:hover {
+      background-color: rgba(13, 110, 253, 0.05);
+      transition: background-color 0.2s ease;
+    }
+
+    .table thead th {
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Tags styling */
+    .sector-tag {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 50px;
+      background-color: #e9ecef;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    /* Card styling */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-title {
+      font-weight: 600;
+      color: var(--secondary-color);
+    }
+
+    .display-6 {
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    /* Sector card styling */
+    .card.h-100 {
+      border-left: 4px solid var(--primary-color);
+      background: linear-gradient(to bottom right, #f8fafc, #ffffff);
+    }
+
+    /* Section headers */
+    .text-center h2 {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .text-center .text-muted {
+      font-size: 1.1rem;
+    }
+
+    /* Icon enhancement */
+    .bi-graph-up-arrow {
+      color: var(--success-color);
+      animation: bounce 1.2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-5px);
+      }
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 768px) {
+      .content-section {
+        margin-top: 80px;
+      }
+      
+      .card .display-6 {
+        font-size: 1.5rem;
+      }
+
+      .table th, .table td {
+        font-size: 0.85rem;
+        padding: 0.5rem;
+      }
+      
+      .navmenu a.btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Accessibility improvements */
+    a:focus, button:focus {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+
+    /* Loading state (if needed) */
+    .loading-placeholder {
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: loading 1.5s infinite;
+    }
+
+    @keyframes loading {
+      0% {
+        background-position: 200% 0;
+      }
+      100% {
+        background-position: -200% 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header id="header" class="header d-flex align-items-center fixed-top">
+  <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+    <a href="{{ url_for('dashboard_admin') }}" class="logo d-flex align-items-center me-auto me-lg-0" aria-label="Stocker Home">
+      <img src="{{ url_for('static', filename='img/logo stocker.png') }}" alt="Stocker Logo">
+      <h1 class="sitename">STOCKER</h1>
+    </a>
+
+    <nav id="navmenu" class="navmenu d-flex align-items-center">
+      <ul class="d-flex align-items-center mb-0">
+        <li><a href="{{ url_for('dashboard_admin') }}" class="nav-link">Dashboard</a></li>
+        <li><a href="{{ url_for('service01') }}" class="nav-link">View Traders</a></li>
+        <li><a href="{{ url_for('service02') }}" class="nav-link">View Transactions</a></li>
+      </ul>
+      <a href="{{ url_for('logout') }}" class="btn btn-danger ms-4 px-4 py-2 rounded logout-button">Logout</a>  
+    </nav>
+
+    <button class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Toggle navigation"></button>
+  </div>
+</header>
+
+<main class="container content-section">
+  <div class="curved-container">
+
+    <div class="text-center mb-5">
+      <i class="bi bi-graph-up-arrow display-4 text-success mb-3"></i>
+      <h2>Trader Portfolio Management</h2>
+      <p class="text-muted">View and manage all trader portfolios across the platform</p>
+    </div>
+
+    <div class="table-responsive mb-5">
+      <table class="table table-striped table-hover align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Trader</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Symbol</th>
+            <th scope="col">Sector</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Avg. Buy Price</th>
+            <th scope="col">Current Price</th>
+            <th scope="col">Market Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for portfolio in portfolios %}
+          <tr>
+            <td>{{ portfolio.user.username }}</td>
+            <td>{{ portfolio.stock.name }}</td>
+            <td><strong>{{ portfolio.stock.symbol }}</strong></td>
+            <td><span class="sector-tag">{{ portfolio.stock.sector }}</span></td>
+            <td>{{ portfolio.quantity }}</td>
+            <td>₹{{ "%.2f"|format(portfolio.average_price) }}</td>
+            <td>₹{{ "%.2f"|format(portfolio.stock.price) }}</td>
+            <td><strong>₹{{ "%.2f"|format(portfolio.stock.price * portfolio.quantity) }}</strong></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="mb-5">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="card h-100">
+            <div class="card-body text-center py-4">
+              <h5 class="card-title mb-3">Total Portfolio Value</h5>
+              <p class="card-text mb-0">
+                <span class="display-6">₹{{ "%.2f"|format(total_portfolio_value) }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100">
+            <div class="card-body text-center py-4">
+              <h5 class="card-title mb-3">Total Traders</h5>
+              <p class="card-text mb-0">
+                <span class="display-6">{{ portfolios|map(attribute='user_id')|unique|list|length }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card h-100">
+            <div class="card-body text-center py-4">
+              <h5 class="card-title mb-3">Total Stocks Held</h5>
+              <p class="card-text mb-0">
+                <span class="display-6">{{ portfolios|map(attribute='stock_id')|unique|list|length }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="mb-4">
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">Sector Distribution</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            {% set sectors = {} %}
+            {% for portfolio in portfolios %}
+              {% set sector = portfolio.stock.sector %}
+              {% if sector in sectors %}
+                {% set _ = sectors.update({sector: sectors[sector] + (portfolio.stock.price * portfolio.quantity)}) %}
+              {% else %}
+                {% set _ = sectors.update({sector: portfolio.stock.price * portfolio.quantity}) %}
+              {% endif %}
+            {% endfor %}
+            
+            {% for sector, value in sectors.items() %}
+            <div class="col-md-3">
+              <div class="card h-100">
+                <div class="card-body text-center py-4">
+                  <h6 class="card-title">{{ sector }}</h6>
+                  <p class="card-text mb-0">₹{{ "%.2f"|format(value) }}</p>
+                  <small class="text-muted">{{ ((value / total_portfolio_value) * 100)|round(1) }}%</small>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+</body>
+</html>

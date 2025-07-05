@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stocker - Cloud-Based Stock Trading Platform</title>
+  
+  <!-- Favicons -->
+  <link href="{{ url_for('static', filename='img/logo_stocker.png') }}" rel="icon" />
+  <link href="{{ url_for('static', filename='img/logo_stocker.png') }}" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor & Main CSS -->
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+
+  <!-- Interactive CSS -->
+  <style>
+    :root {
+      --primary-color: #004aad;
+      --primary-dark: #003080;
+      --primary-light: #4d8bff;
+      --secondary-color: #00c896;
+      --accent-color: #ff6b35;
+      --text-dark: #2d3748;
+      --text-light: #f8f9fa;
+      --bg-gradient: linear-gradient(40deg, #004aad 0%, #0a89ff 100%);
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --section-padding: 100px 0;
+      --border-radius: 12px;
+      --box-shadow: 0 10px 30px rgba(0, 74, 173, 0.15);
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-dark);
+      line-height: 1.7;
+      overflow-x: hidden;
+      background-color: #f8fafc;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    
+    a {
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    /* Header Styles */
+    .header {
+      background-color: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    .logo img {
+      height: 42px;
+      margin-right: 12px;
+      transition: transform 0.3s ease;
+    }
+    
+    .logo:hover img {
+      transform: rotate(-5deg);
+    }
+    
+    .sitename {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: -0.5px;
+    }
+    
+    .navmenu ul li a {
+      color: var(--text-dark);
+      font-weight: 500;
+      padding: 12px 18px;
+      position: relative;
+      font-size: 1.05rem;
+    }
+    
+    .navmenu ul li a:hover,
+    .navmenu ul li a.active {
+      color: var(--primary-color);
+    }
+    
+    .navmenu ul li a:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 3px;
+      bottom: 0;
+      left: 18px;
+      background-color: var(--primary-color);
+      transition: width 0.3s ease, left 0.3s ease;
+      border-radius: 3px;
+    }
+    
+    .navmenu ul li a:hover:after,
+    .navmenu ul li a.active:after {
+      width: calc(100% - 36px);
+      left: 18px;
+    }
+    
+    .btn-getstarted {
+      background: var(--primary-color);
+      color: white;
+      padding: 10px 24px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 74, 173, 0.2);
+      border: 2px solid var(--primary-color);
+    }
+    
+    .btn-getstarted:hover {
+      background: transparent;
+      color: var(--primary-color);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 74, 173, 0.3);
+    }
+    
+    /* Hero Section */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      align-items: center;
+      background: var(--bg-gradient);
+      overflow: hidden;
+    }
+    
+    .hero:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("{{ url_for('static', filename='img/pattern.png') }}") repeat;
+      opacity: 0.05;
+      z-index: 1;
+    }
+    
+    .hero img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.15;
+    }
+    
+    .hero .container {
+      position: relative;
+      z-index: 3;
+      color: white;
+    }
+    
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .hero p.lead {
+      font-size: 1.5rem;
+      font-weight: 300;
+      margin-bottom: 2.5rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .hero p.lead b {
+      font-weight: 600;
+      color: white;
+    }
+    
+    .btn-primary {
+      background: white;
+      color: var(--primary-color);
+      border: 2px solid white;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: transparent;
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+    }
+    
+    .btn-outline-light {
+      border: 2px solid rgba(255, 255, 255, 0.7);
+      color: white;
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline-light:hover {
+      background: white;
+      color: var(--primary-color);
+      border-color: white;
+      transform: translateY(-3px);
+    }
+    
+    /* About Section */
+    .about {
+      padding: var(--section-padding);
+      position: relative;
+    }
+    
+    .about:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("{{ url_for('static', filename='img/dots-bg.png') }}") repeat;
+      opacity: 0.03;
+      z-index: 0;
+    }
+    
+    .about .container {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .about .content h3 {
+      font-weight: 800;
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+    
+    .about .content p.fst-italic {
+      font-style: italic;
+      color: var(--secondary-color);
+      font-weight: 500;
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+    }
+    
+    .about .content p {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .about .img-fluid {
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      border: 5px solid white;
+    }
+    
+    .about .img-fluid:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(0, 74, 173, 0.2);
+    }
+    
+    .about ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .about ul li {
+      position: relative;
+      padding-left: 2rem;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+    
+    .about ul li i {
+      position: absolute;
+      left: 0;
+      top: 0.3rem;
+      color: var(--primary-color);
+      font-size: 1.2rem;
+    }
+    
+    /* Services Section */
+    .services {
+      padding: var(--section-padding);
+      background: var(--bg-gradient);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .services:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("{{ url_for('static', filename='img/wave-bg.png') }}") repeat;
+      opacity: 0.05;
+      z-index: 0;
+    }
+    
+    .services .container {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .services .section-title {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    
+    .services .section-title h2 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: white;
+    }
+    
+    .services .section-title p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .service-item {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      padding: 2.5rem;
+      height: 100%;
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      box-shadow: var(--box-shadow);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .service-item:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 0;
+      background: var(--primary-color);
+      transition: height 0.4s ease;
+    }
+    
+    .service-item:hover {
+      transform: translateY(-15px);
+      box-shadow: 0 20px 40px rgba(0, 74, 173, 0.25);
+    }
+    
+    .service-item:hover:before {
+      height: 100%;
+    }
+    
+    .service-item .icon {
+      font-size: 3rem;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease;
+    }
+    
+    .service-item:hover .icon {
+      transform: scale(1.1);
+    }
+    
+    .service-item h3 {
+      color: var(--primary-color);
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin-bottom: 1.2rem;
+      transition: color 0.3s ease;
+    }
+    
+    .service-item:hover h3 {
+      color: var(--primary-dark);
+    }
+    
+    .service-item p {
+      color: var(--text-dark);
+      font-size: 1.05rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    /* Footer */
+    .footer {
+      background: #1a1a1a;
+      color: white;
+      padding-top: 80px;
+      position: relative;
+    }
+    
+    .footer:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: var(--bg-gradient);
+    }
+    
+    .footer-about .sitename {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+    }
+    
+    .footer-about p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 1rem;
+    }
+    
+    .footer-contact p strong {
+      color: white;
+      font-weight: 600;
+    }
+    
+    .footer-contact p span {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .social-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-radius: 50%;
+      margin-right: 12px;
+      transition: all 0.3s ease;
+    }
+    
+    .social-links a:hover {
+      background: var(--primary-color);
+      transform: translateY(-3px);
+    }
+    
+    .footer-links h4 {
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-bottom: 1rem;
+    }
+    
+    .footer-links h4:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 50px;
+      height: 3px;
+      background: var(--primary-color);
+      border-radius: 3px;
+    }
+    
+    .footer-links ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .footer-links ul li {
+      margin-bottom: 0.8rem;
+    }
+    
+    .footer-links ul li i {
+      color: var(--primary-color);
+      margin-right: 8px;
+      font-size: 0.9rem;
+    }
+    
+    .footer-links ul li a {
+      color: rgba(255, 255, 255, 0.7);
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+    
+    .footer-links ul li a:hover {
+      color: white;
+      padding-left: 5px;
+    }
+    
+    .footer-newsletter input {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      padding: 12px 15px;
+      border-radius: 50px;
+    }
+    
+    .footer-newsletter input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .footer-newsletter .btn {
+      width: 100%;
+      border-radius: 50px;
+      padding: 12px;
+      font-weight: 600;
+      background: var(--primary-color);
+      border: none;
+    }
+    
+    .footer-newsletter .btn:hover {
+      background: var(--primary-dark);
+    }
+    
+    .copyright {
+      background: #0a0a0a;
+      padding: 25px 0;
+      margin-top: 60px;
+      text-align: center;
+    }
+    
+    .copyright p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 0;
+    }
+    
+    .copyright .credits {
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+    
+    .copyright .credits a {
+      color: var(--primary-light);
+    }
+    
+    /* Scroll Top Button */
+    .scroll-top {
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+      box-shadow: 0 5px 20px rgba(0, 74, 173, 0.3);
+    }
+    
+    .scroll-top.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .scroll-top:hover {
+      background: var(--primary-dark);
+      transform: translateY(-5px) scale(1.1);
+    }
+    
+    /* Animations */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 1200px) {
+      :root {
+        --section-padding: 90px 0;
+      }
+      
+      .hero h1 {
+        font-size: 3rem;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      :root {
+        --section-padding: 80px 0;
+      }
+      
+      .hero {
+        height: auto;
+        padding: 150px 0 100px;
+        min-height: auto;
+      }
+      
+      .hero h1 {
+        font-size: 2.8rem;
+      }
+      
+      .hero p.lead {
+        font-size: 1.3rem;
+      }
+      
+      .about .content {
+        padding-top: 40px;
+      }
+      
+      .service-item {
+        margin-bottom: 30px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      :root {
+        --section-padding: 70px 0;
+      }
+      
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .hero p.lead {
+        font-size: 1.2rem;
+      }
+      
+      .about .content h3 {
+        font-size: 2.2rem;
+      }
+      
+      .services .section-title h2 {
+        font-size: 2.4rem;
+      }
+      
+      .footer-newsletter {
+        margin-top: 40px;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      :root {
+        --section-padding: 60px 0;
+      }
+      
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      
+      .btn-getstarted {
+        padding: 8px 18px;
+        font-size: 1rem;
+      }
+      
+      .about .content h3 {
+        font-size: 2rem;
+      }
+      
+      .services .section-title h2 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+
+<!-- Body -->
+<body class="index-page">
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+      <a href="{{ url_for('index') }}" class="logo d-flex align-items-center me-auto me-lg-0">
+        <img src="{{ url_for('static', filename='img/logo_stocker.png') }}" alt="Stocker Logo">
+        <h1 class="sitename">STOCKER</h1>
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+      {% if session.get('user') %}
+        <a class="btn-getstarted" href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a class="btn-getstarted" href="{{ url_for('login') }}">Login/Signup</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Hero Section -->
+    <section id="hero" class="hero section dark-background">
+      <img src="{{ url_for('static', filename='img/hero_image.jpeg') }}" alt="Stock Market Background" data-aos="fade-in">
+      <div class="container">
+        <div class="row justify-content-center text-center" data-aos="fade-up" data-aos-delay="100">
+          <div class="col-xl-8 col-lg-10">
+            <h1 class="display-4 fw-bold mb-4">Next-Gen Stock Trading Platform</h1>
+            <p class="lead"><b>Trade smarter with our cloud-powered, ultra-fast trading technology</b></p>
+            <div class="mt-5">
+              {% if session.get('user') %}
+                <a href="{{ url_for('dashboard') }}" class="btn btn-primary btn-lg px-5 me-3">Go to Dashboard</a>
+              {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg px-5 me-3">Start Trading Now</a>
+                <a href="#about" class="btn btn-outline-light btn-lg px-5">Explore Features</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row gy-5 align-items-center">
+          <div class="col-lg-6 order-1 order-lg-2">
+            <img src="{{ url_for('static', filename='img/about.jpg') }}" class="img-fluid floating" alt="About Stocker Platform">
+          </div>
+          <div class="col-lg-6 order-2 order-lg-1 content">
+            <h3>Revolutionizing Your Trading Experience</h3>
+            <p class="fst-italic">Where innovation meets financial markets</p>
+            <p>Stocker represents the future of stock trading, combining cutting-edge technology with user-centric design. Our Hyderabad-based platform delivers:</p>
+            <ul>
+              <li><i class="bi bi-check-circle-fill"></i> <strong>Blazing-fast execution</strong> with 99.9% uptime guarantee</li>
+              <li><i class="bi bi-check-circle-fill"></i> <strong>AI-powered insights</strong> for smarter investment decisions</li>
+              <li><i class="bi bi-check-circle-fill"></i> <strong>Institutional-grade tools</strong> for retail investors</li>
+              <li><i class="bi bi-check-circle-fill"></i> <strong>Military-grade security</strong> protecting your assets</li>
+            </ul>
+            <p class="mt-4">Built on a robust AWS cloud infrastructure with Flask backend and DynamoDB, Stocker offers enterprise-level performance with the simplicity retail traders love. Our platform scales dynamically to handle market volatility, ensuring you never miss an opportunity.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services section">
+      <div class="container">
+        <div class="section-title" data-aos="fade-in">
+          <h2><b>Advanced Trading Solutions</b></h2>
+          <p>Professional tools designed for modern traders</p>
+        </div>
+        <div class="row gy-5">
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-shield-lock"></i></div>
+              <a class="stretched-link" href="{{ url_for('login') }}"></a>
+              <h3>Bank-Level Security</h3>
+              <p>Multi-factor authentication, biometric login, and end-to-end encryption ensure your account and data remain protected at all times.</p>
+              <div class="service-badge">NEW</div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-lightning-charge"></i></div>
+              <a class="stretched-link" href="{{ url_for('login') }}"></a>
+              <h3>Ultra-Low Latency</h3>
+              <p>Our direct market access technology executes trades in milliseconds, giving you the speed advantage in fast-moving markets.</p>
+              <div class="service-badge">HOT</div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+            <div class="service-item position-relative">
+              <div class="icon"><i class="bi bi-graph-up-arrow"></i></div>
+              <a class="stretched-link" href="{{ url_for('login') }}"></a>
+              <h3>Smart Analytics</h3>
+              <p>Advanced charting tools, technical indicators, and AI-driven insights help you make informed trading decisions.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section section bg-light">
+      <div class="container">
+        <div class="row gy-4">
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item text-center">
+              <h3><span class="counter" data-count="99.9">0</span>%</h3>
+              <p>Platform Uptime</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item text-center">
+              <h3><span class="counter" data-count="15000">0</span>+</h3>
+              <p>Active Traders</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item text-center">
+              <h3><span class="counter" data-count="50">0</span>ms</h3>
+              <p>Average Execution Speed</p>
+            </div>
+          </div>
+          <div class="col-lg-3 col-md-6">
+            <div class="stats-item text-center">
+              <h3><span class="counter" data-count="24">0</span>/7</h3>
+              <p>Customer Support</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="footer" class="footer dark-background">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row gy-5">
+          <div class="col-lg-4 col-md-6 footer-about">
+            <a href="{{ url_for('index') }}" class="logo d-flex align-items-center">
+              <span class="sitename">Stocker</span>
+            </a>
+            <div class="footer-contact pt-3">
+              <p>Financial District, Gachibowli</p>
+              <p>Hyderabad, Telangana 500032</p>
+              <p class="mt-3"><strong>Phone:</strong> <span>+91 98765 43210</span></p>
+              <p><strong>Email:</strong> <span>support@stocker.com</span></p>
+            </div>
+            <div class="social-links mt-4">
+              <a href="#"><i class="bi bi-twitter-x"></i></a>
+              <a href="#"><i class="bi bi-facebook"></i></a>
+              <a href="#"><i class="bi bi-linkedin"></i></a>
+              <a href="#"><i class="bi bi-instagram"></i></a>
+            </div>
+          </div>
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+              <li><i class="bi bi-chevron-right"></i> <a href="#hero">Home</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#about">About us</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#services">Services</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Pricing</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">FAQ</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-2 col-md-3 footer-links">
+            <h4>Resources</h4>
+            <ul>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Market News</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Research Reports</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Trading Guides</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Webinars</a></li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Blog</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-4 col-md-12 footer-newsletter">
+            <h4>Market Insights Newsletter</h4>
+            <p>Get daily market analysis and trading ideas delivered to your inbox</p>
+            <form action="" method="post" class="mt-4">
+              <input type="email" name="email" class="form-control" placeholder="Your Email Address" required>
+              <button type="submit" class="btn btn-primary mt-3">Subscribe Now</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6 text-center text-md-start">
+            <p>© <span id="current-year">2023</span> <strong class="px-1 sitename">Stocker</strong>. All Rights Reserved</p>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <div class="credits">
+              Designed with <i class="bi bi-heart-fill text-danger"></i> by <a href="#">SmartBridge Team</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/aos/aos.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/purecounter/purecounter_vanilla.js') }}"></script>
+
+  <!-- Main JS File -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  
+  <script>
+    // Preloader
+    window.addEventListener('load', function() {
+      const preloader = document.getElementById('preloader');
+      setTimeout(function() {
+        preloader.style.opacity = '0';
+        setTimeout(function() {
+          preloader.style.display = 'none';
+        }, 500);
+      }, 500);
+    });
+    
+    // Activate scroll top button
+    window.addEventListener('scroll', function() {
+      const scrollTop = document.getElementById('scroll-top');
+      if (window.pageYOffset > 300) {
+        scrollTop.classList.add('active');
+      } else {
+        scrollTop.classList.remove('active');
+      }
+    });
+    
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          window.scrollTo({
+            top: target.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    
+    // Counter animation
+    const counters = document.querySelectorAll('.counter');
+    const speed = 200;
+    
+    function animateCounters() {
+      counters.forEach(counter => {
+        const target = +counter.getAttribute('data-count');
+        const count = +counter.innerText;
+        const increment = target / speed;
+        
+        if (count < target) {
+          counter.innerText = Math.ceil(count + increment);
+          setTimeout(animateCounters, 1);
+        } else {
+          counter.innerText = target;
+        }
+      });
+    }
+    
+    // Start counter animation when stats section is in view
+    const statsSection = document.querySelector('.stats-section');
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        animateCounters();
+        observer.unobserve(statsSection);
+      }
+    }, { threshold: 0.5 });
+    
+    if (statsSection) {
+      observer.observe(statsSection);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!-- templates/service-details-5.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Portfolio - Stocker</title>
+
+  <!-- Favicons -->
+  <link href="{{ url_for('static', filename='img/logo stocker.png') }}" rel="icon">
+  <link href="{{ url_for('static', filename='img/logo stocker.png') }}" rel="apple-touch-icon">
+
+  <!-- Fonts and CSS -->
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #0d6efd;
+      --secondary-color: #6c757d;
+      --success-color: #198754;
+      --danger-color: #dc3545;
+      --info-color: #0dcaf0;
+      --light-bg: #f8f9fa;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: #f5f7fa;
+      color: #212529;
+    }
+
+    /* Header and layout */
+    .content-section {
+      margin-top: 100px;
+      margin-bottom: 50px;
+    }
+
+    .header {
+      background-color: #ffffff;
+      box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .sitename {
+      font-weight: 700;
+      color: var(--primary-color);
+      margin-bottom: 0;
+    }
+
+    /* Main content */
+    .portfolio-summary {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: var(--card-shadow);
+    }
+
+    /* Cards */
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      margin-bottom: 30px;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-header {
+      font-weight: 600;
+      padding: 1rem 1.5rem;
+    }
+
+    /* Tables */
+    .table {
+      margin-bottom: 0;
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: rgba(13, 110, 253, 0.05);
+    }
+
+    .thead-light {
+      background-color: #f8f9fa;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* Profit/Loss styling */
+    .text-success {
+      color: var(--success-color) !important;
+      font-weight: 600;
+    }
+
+    .text-danger {
+      color: var(--danger-color) !important;
+      font-weight: 600;
+    }
+
+    /* Buttons */
+    .btn-sm {
+      transition: all 0.2s ease;
+      min-width: 80px;
+      border-radius: 4px;
+      font-weight: 500;
+      margin: 2px;
+    }
+
+    .btn-sm:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Alerts */
+    .alert {
+      border-radius: 8px;
+    }
+
+    .alert-link {
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    /* Value formatting */
+    .portfolio-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .content-section {
+        margin-top: 80px;
+      }
+      
+      table th, table td {
+        font-size: 0.85rem;
+        padding: 0.75rem 0.5rem;
+      }
+      
+      .btn-sm {
+        padding: 0.25rem 0.5rem;
+        display: block;
+        width: 100%;
+        margin-bottom: 5px;
+      }
+      
+      .actions-cell {
+        white-space: nowrap;
+      }
+      
+      .portfolio-summary {
+        padding: 15px;
+      }
+    }
+
+    /* Accessibility improvements */
+    a:focus, button:focus {
+      outline: 2px solid var(--primary-color);
+      outline-offset: 2px;
+    }
+
+    /* Animation for value changes */
+    @keyframes pulseGreen {
+      0% { background-color: transparent; }
+      50% { background-color: rgba(25, 135, 84, 0.1); }
+      100% { background-color: transparent; }
+    }
+
+    @keyframes pulseRed {
+      0% { background-color: transparent; }
+      50% { background-color: rgba(220, 53, 69, 0.1); }
+      100% { background-color: transparent; }
+    }
+
+    .value-change {
+      animation-duration: 1s;
+      animation-iteration-count: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+      <a href="{{ url_for('dashboard_trader') }}" class="logo d-flex align-items-center me-auto me-lg-0" aria-label="Stocker Home">
+        <img src="{{ url_for('static', filename='img/logo stocker.png') }}" alt="Stocker Logo">
+        <h1 class="sitename">STOCKER</h1>
+      </a>
+
+      <nav id="navmenu" class="navmenu d-flex align-items-center">
+        <ul class="d-flex align-items-center mb-0">
+          <li><a href="{{ url_for('dashboard_trader') }}" class="nav-link">Dashboard</a></li>
+          <li><a href="{{ url_for('service04') }}" class="nav-link">Browse Stocks</a></li>
+        </ul>
+        <a href="{{ url_for('logout') }}" class="btn btn-danger ms-4 px-4 py-2 rounded logout-button">Logout</a>  
+      </nav>
+
+      <button class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Toggle navigation"></button>
+    </div>
+  </header>
+
+  <main class="container content-section">
+    <div class="container py-4">
+      <!-- Portfolio Summary -->
+      <div class="portfolio-summary">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h2><i class="bi bi-wallet2 me-2"></i>My Portfolio</h2>
+          </div>
+          <div class="col-md-4 text-md-end">
+            <p class="mb-0">Total Portfolio Value: <span class="portfolio-value">₹{{ '{:,.2f}'.format(total_value) }}</span></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Holdings Section -->
+      <div class="card">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0"><i class="bi bi-pie-chart me-2"></i>Current Holdings</h4>
+        </div>
+        <div class="card-body">
+          {% if portfolio %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Avg. Price</th>
+                    <th scope="col">Current Price</th>
+                    <th scope="col">Current Value</th>
+                    <th scope="col">Profit/Loss</th>
+                    <th scope="col" class="actions-cell">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in portfolio %}
+                    {% set current_value = item.quantity * item.stock.price %}
+                    {% set purchase_value = item.quantity * item.average_price %}
+                    {% set profit_loss = current_value - purchase_value %}
+                    {% set profit_loss_percent = (profit_loss / purchase_value * 100) if purchase_value > 0 else 0 %}
+                    <tr>
+                      <td><strong>{{ item.stock.symbol }}</strong></td>
+                      <td>{{ item.stock.name }}</td>
+                      <td>{{ item.quantity }}</td>
+                      <td>₹{{ '{:.2f}'.format(item.average_price) }}</td>
+                      <td class="value-change">₹{{ '{:.2f}'.format(item.stock.price) }}</td>
+                      <td>₹{{ '{:,.2f}'.format(current_value) }}</td>
+                      <td class="{{ 'text-success' if profit_loss >= 0 else 'text-danger' }}">
+                        ₹{{ '{:,.2f}'.format(profit_loss) }} ({{ '{:.2f}'.format(profit_loss_percent) }}%)
+                      </td>
+                      <td class="actions-cell">
+                        <a href="{{ url_for('buy_stock', stock_id=item.stock.id) }}" class="btn btn-sm btn-success">Buy More</a>
+                        <a href="{{ url_for('sell_stock', stock_id=item.stock.id) }}" class="btn btn-sm btn-danger">Sell</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>You don't have any stocks in your portfolio yet. 
+              <a href="{{ url_for('service04') }}" class="alert-link">Browse stocks</a> to get started!
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Transaction History Section -->
+      <div class="card">
+        <div class="card-header bg-secondary text-white">
+          <h4 class="mb-0"><i class="bi bi-clock-history me-2"></i>Transaction History</h4>
+        </div>
+        <div class="card-body">
+          {% if transactions %}
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead class="thead-light">
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Action</th>
+                    <th scope="col">Symbol</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for transaction in transactions %}
+                    <tr>
+                      <td>{{ transaction.transaction_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                      <td class="{{ 'text-success' if transaction.action == 'buy' else 'text-danger' }} fw-bold">
+                        {{ transaction.action.upper() }}
+                      </td>
+                      <td>{{ transaction.stock.symbol }}</td>
+                      <td>{{ transaction.quantity }}</td>
+                      <td>₹{{ '{:.2f}'.format(transaction.price) }}</td>
+                      <td>₹{{ '{:,.2f}'.format(transaction.quantity * transaction.price) }}</td>
+                      <td>
+                        <span class="badge bg-{{ 'success' if transaction.status == 'completed' else 'warning' }}">
+                          {{ transaction.status }}
+                        </span>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% else %}
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>You haven't made any transactions yet. 
+              <a href="{{ url_for('service04') }}" class="alert-link">Browse stocks</a> to get started!
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Add animation to price cells when they update
+    document.addEventListener('DOMContentLoaded', function() {
+      const valueCells = document.querySelectorAll('.value-change');
+      
+      // This would be replaced with real-time updates in a production environment
+      // For demonstration purposes only
+      valueCells.forEach(cell => {
+        const randomChange = Math.random();
+        if (randomChange > 0.5) {
+          cell.style.animationName = 'pulseGreen';
+        } else {
+          cell.style.animationName = 'pulseRed';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
